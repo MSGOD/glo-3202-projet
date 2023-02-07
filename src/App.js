@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import {Routes, Route, Link } from "react-router-dom";
 
-function Home() {
+const Home = () => {
   return (
     <div>
       <h2>Welcome</h2>
@@ -12,15 +12,20 @@ function Home() {
   );
 }
 
-function About() {
+const About = () => {
   return (
     <div>
       <h2>About</h2>
+      <Link to="/">
+        <button style={{ position: "absolute", top: "10px", right: "10px" }}>
+          Home
+        </button>
+      </Link>
     </div>
   );
 }
 
-function Rate() {
+const Rate = () => {
   const [grade, setGrade] = useState(0);
   const [name, setName] = useState("");
   const [reasoning, setReasoning] = useState("");
@@ -32,52 +37,67 @@ function Rate() {
 
   return (
     <div>
+      <Link to="/">
+        <button style={{ position: "absolute", top: "10px", right: "10px" }}>
+          Home
+        </button>
+      </Link>
       <h2>Rate</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Grade (0-10):
-          <input
-            type="number"
-            min="0"
-            max="10"
-            value={grade}
-            onChange={(event) => setGrade(event.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Name:
-          <input
-            type="text"
-            maxLength="100"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Reasoning:
-          <textarea
-            maxLength="1000"
-            value={reasoning}
-            onChange={(event) => setReasoning(event.target.value)}
-          />
-        </label>
-        <br />
-        <button type="submit">Submit</button>
-      </form>
+      <div style={{ border: "1px solid gray", padding: "20px", margin: "20px" }}>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Grade (0-10):
+            <br />
+            <input
+              type="number"
+              min="0"
+              max="10"
+              value={grade}
+              onChange={(event) => setGrade(event.target.value)}
+            />
+          </label>
+          <br />
+          <br />
+          <label>
+            Name:
+            <br />
+            <input
+              type="text"
+              maxLength="100"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
+          </label>
+          <br />
+          <br />
+          <label>
+            Reasoning:
+            <br />
+            <textarea
+              maxLength="1000"
+              value={reasoning}
+              onChange={(event) => setReasoning(event.target.value)}
+            />
+          </label>
+          <br />
+          <br />
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
 
 function App() {
   return (
-    <Router>
-      <Route path="/" exact component={Home} />
-      <Route path="/about" component={About} />
-      <Route path="/rate" component={Rate} />
-    </Router>
+    <Routes>
+      <Route path="/"  element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/rate" element={<Rate />} />
+    </Routes>
   );
 }
 
-export default App;
+export {App};
