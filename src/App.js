@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import {Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
+import './App.css';
+
+const { Prohairesis } = require('prohairesis');
+const env = require('./env');
+
+const database = new Prohairesis(env.CLEARDB_DATABASE_URL);
+
 
 const Home = () => {
   return (
@@ -26,29 +33,51 @@ const About = () => {
 }
 
 const Rate = () => {
-  const [grade, setGrade] = useState(0);
+  const [grade, setGrade] = useState(10);
   const [name, setName] = useState("");
   const [reasoning, setReasoning] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (!name) {
+      return alert("Name field cannot be empty");
+    }
     console.log(grade, name, reasoning);
+    database.query(`
+      INSERT INTO ratings(create_time,grade,name,commentaire) VALUES(
+        NOW(),
+        ${grade},
+        ${name},
+        ${reasoning});
+    `)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((e) => {
+        console.error(e);
+      })
   };
 
+
+
   return (
-    <div>
-      <Link to="/">
-        <button style={{ position: "absolute", top: "10px", right: "10px" }}>
-          Home
-        </button>
-      </Link>
-      <h2>Rate</h2>
-      <div style={{ border: "1px solid gray", padding: "20px", margin: "20px" }}>
+    <div className="Page">
+      <div className="TopBar">
+        <Link to="/">
+          <button className="btnHome">Home</button>
+        </Link>
+
+        <h2 className="PageTitle">Rate</h2>
+      </div>
+
+      <div className="FormBox">
         <form onSubmit={handleSubmit}>
           <label>
-            Grade (0-10):
+            <label className="ReqFieldLabel">*: Champ obligatoire</label>
+            Grade (0-10)*:
             <br />
             <input
+              className="inputGrade"
               type="number"
               min="0"
               max="10"
@@ -59,7 +88,7 @@ const Rate = () => {
           <br />
           <br />
           <label>
-            Name:
+            Name*:
             <br />
             <input
               type="text"
@@ -71,7 +100,7 @@ const Rate = () => {
           <br />
           <br />
           <label>
-            Reasoning:
+            Comment:
             <br />
             <textarea
               maxLength="1000"
@@ -81,7 +110,7 @@ const Rate = () => {
           </label>
           <br />
           <br />
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div className="btnSubmit">
             <button type="submit">Submit</button>
           </div>
         </form>
@@ -93,11 +122,11 @@ const Rate = () => {
 function App() {
   return (
     <Routes>
-      <Route path="/"  element={<Home />} />
+      <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/rate" element={<Rate />} />
     </Routes>
   );
 }
 
-export {App};
+export { App };
