@@ -49,6 +49,7 @@
   border-radius: 10px;
   padding: 20px;
   margin: 20px;
+  background-color: lavender;
 }
 
 .ReqFieldLabel {
@@ -59,4 +60,77 @@
 .btnSubmit {
   display: flex;
   justify-content: flex-end;
+}
+
+.TopBar{
+  display: flex;
+  flex-direction: row;
+  background-color: #282c34;
+  height: 80px;
+}
+
+.btnAbout{
+  position: absolute;
+  right: 10px;
+  top: 15px;
+  height: 50px;
+  width: 70px;
+  cursor: pointer;
+}
+
+.btnRate{
+  position: absolute;
+  right: 90px;
+  top: 15px;
+  height: 50px;
+  width: 70px;
+  cursor: pointer;
+}
+
+.Title{
+  position: absolute;
+  left: 15px;
+  top: 5px;
+  color: aliceblue;
+}
+
+body{
+  margin: 0px;
+}
+
+.NotesTitle{
+  margin-left: 1.5rem;
+  font-size: 150%;
+}
+
+.btnHome{
+  position: absolute;
+  right: 10px;
+  top: 15px;
+  height: 50px;
+  width: 60px;
+  cursor: pointer;
+}
+
+.ReviewCard{
+  margin-bottom: 40px;
+  width: 45%;
+  background-color: lavender;
+}
+
+.ReviewContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ResteSettings{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 25px;
+}
+
+.DumSwitch{
+  margin-bottom: 25px;
 }

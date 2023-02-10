@@ -1,29 +1,105 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import './App.css';
 import Axios from 'axios';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Switch from '@mui/material/Switch';
 
 
 const Home = () => {
+  const [appReviewList, setAppReviewList] = useState([])
+
+  useEffect(() => {
+    Axios.get('http://localhost:3001/api/get').then((response) => {
+      setAppReviewList(response.data)
+    })
+  }, [])
+
   return (
-    <div>
-      <h2>Welcome</h2>
-      <button><Link to="/about">About</Link></button>
-      <br />
-      <button><Link to="/rate">Rate</Link></button>
+    <div className="PageHome">
+      <div className="TopBar">
+        <h2 className="Title">Bienvenue</h2>
+        <Link to="/Settings"><button className="btnAbout">Settings</button></Link>
+        <br />
+        <Link to="/Rate"><button className="btnRate">Review</button></Link>
+      </div>
+      <div className="Reste">
+        <h3 className="NotesTitle">Website Reviews ({appReviewList.length}): </h3>
+        <div className="ReviewContainer">
+          {appReviewList.map((val) => {
+            return (
+              <div className="ReviewCard">
+                <Card sx={{ bgcolor: 'transparent' }}>
+                  <CardContent>
+                    <Typography variant="h5" component="div">
+                      {val.name}
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                      {val.grade}/10
+                    </Typography>
+                    <Typography variant="body2">
+                      {val.commentaire}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </div>
+            )
+          })}
+        </div>
+      </div>
     </div>
   );
 }
 
-const About = () => {
+const Settings = () => {
+  const [Localchecked, setLocalChecked] = React.useState(false);
+  const [Cookiechecked, setCookieChecked] = React.useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem('LocalStorage') == 'false') {
+      setLocalChecked(false)
+    }
+    if (localStorage.getItem('LocalStorage') == 'true') {
+      setLocalChecked(true)
+    }
+    var cookie = document.cookie.split(';').map(cookie => cookie.split('=')).reduce((accumulator, [key, value]) => ({ ...accumulator, [key.trim()]: decodeURIComponent(value) }),{});
+    if (cookie.Cookie == 'false') {
+      setCookieChecked(false)
+    }
+    if (cookie.Cookie == 'true') {
+      setCookieChecked(true)
+    }
+  }, [])
+
+  const handleChange = (event) => {
+    setLocalChecked(event.target.checked)
+    localStorage.setItem('LocalStorage', document.getElementById('LocalSwitch').checked)
+  }
+  const handleChangeCookie = (event) => {
+    setCookieChecked(event.target.checked)
+    document.cookie = 'Cookie=' + document.getElementById('CookieSwitch').checked
+  }
+
+// tesr
+
   return (
-    <div>
-      <h2>About</h2>
-      <Link to="/">
-        <button style={{ position: "absolute", top: "10px", right: "10px" }}>
-          Home
-        </button>
-      </Link>
+    <div className="AboutPage">
+      <div className="TopBar">
+        <h2 className="Title">Settings</h2>
+        <Link to="/Home"> 
+          <button className="btnHome">
+            Home
+          </button>
+        </Link>
+      </div>
+      <div className="ResteSettings">
+        <div className="TitreSwitch">LocalStorage Tester:</div>
+        <Switch id="LocalSwitch" className="DumSwitch" onChange={handleChange} checked={Localchecked}/>
+        <div className="TitreSwitch">Cookie Tester:</div>
+        <Switch id="CookieSwitch" className="DumSwitch" onChange={handleChangeCookie} checked={Cookiechecked}/>
+      </div>
     </div>
   );
 }
@@ -38,13 +114,14 @@ const Rate = () => {
     if (!name) {
       return alert("Name field cannot be empty");
     }
-    Axios.post('http://localhost:3002/api/insert', {
-      InputGrade: grade, 
-      InputName: name, 
+    Axios.post('/api/insert', {
+      InputGrade: grade,
+      InputName: name,
       InputComment: reasoning
-    }).then(() => {
-      alert('success insert')
     })
+    setGrade(10)
+    setName('')
+    setReasoning('')
   };
 
 
@@ -52,11 +129,11 @@ const Rate = () => {
   return (
     <div className="Page">
       <div className="TopBar">
-        <Link to="/">
+        <Link to="/Home">
           <button className="btnHome">Home</button>
         </Link>
 
-        <h2 className="PageTitle">Rate</h2>
+        <h2 className="Title">Revue</h2>
       </div>
 
       <div className="FormBox">
@@ -111,9 +188,9 @@ const Rate = () => {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/rate" element={<Rate />} />
+      <Route path="/Home" element={<Home />} />
+      <Route path="/Settings" element={<Settings />} />
+      <Route path="/Rate" element={<Rate />} />
     </Routes>
   );
 }
