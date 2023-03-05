@@ -12,7 +12,7 @@ const Home = () => {
   const [appReviewList, setAppReviewList] = useState([])
 
   useEffect(() => {
-    Axios.get('http://localhost:3001/api/get').then((response) => {
+    Axios.get('/api/get').then((response) => {
       setAppReviewList(response.data)
     })
   }, [])
@@ -88,7 +88,7 @@ const Settings = () => {
     <div className="AboutPage">
       <div className="TopBar">
         <h2 className="Title">Settings</h2>
-        <Link to="/Home"> 
+        <Link to="/"> 
           <button className="btnHome">
             Home
           </button>
@@ -129,7 +129,7 @@ const Rate = () => {
   return (
     <div className="Page">
       <div className="TopBar">
-        <Link to="/Home">
+        <Link to="/">
           <button className="btnHome">Home</button>
         </Link>
 
@@ -188,7 +188,7 @@ const Rate = () => {
 function App() {
   return (
     <Routes>
-      <Route path="/Home" element={<Home />} />
+      <Route path="/" element={<Home />} />
       <Route path="/Settings" element={<Settings />} />
       <Route path="/Rate" element={<Rate />} />
     </Routes>
